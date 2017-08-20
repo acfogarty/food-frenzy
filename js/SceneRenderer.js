@@ -7,17 +7,6 @@ function SceneRenderer(context, model) {
     this._ctx = context;
     this._model = model;
     
-    // top left corner of the board
-    this._x = 0;
-    this._y = 0;
-    
-    // Width and height of the board rectangle
-    this._width = 0;
-    this._height = 0;
-    
-    // the optimal size of the board cell TODO remove?
-    this._cellSize = 0;
-
     // Background image
     this._backgroundImage = new Image();
     this._backgroundImage.onload = function() {
@@ -34,8 +23,6 @@ function SceneRenderer(context, model) {
 
     this._foodTypes = ['GOOD','BAD','GOOD','GOOD','BAD','GOOD']; //TODO make dict
     this._foodSpriteCropX = {'APPLE': 0, 'CHEESE': 40, 'LEMON': 80, 'CARROT': 120, 'PIZZA': 160, 'GRAPES': 200};
-    this._foodSpriteWidth = 35;
-    this._foodSpriteHeight = 40;
 }
 
 _p = SceneRenderer.prototype;
@@ -46,7 +33,7 @@ _p = SceneRenderer.prototype;
 _p.repaint = function() {
     this._ctx.save();
     this._ctx.translate(this._x, this._y);
-    bgImageSize = this._drawBackground();
+    bgImageSize = this._drawBackground(); // TODO don't return size, this is a variable is model now, rather check if image siye is same as model.size
     this._drawHero(bgImageSize.width*0.2, bgImageSize.height*0.8); //TODO hero class with coordinqtes
     this._drawFood(this._model._foodSprites);
     this._ctx.restore();
@@ -65,8 +52,8 @@ _p._drawHero = function(x, y) {
 
 _p._drawFood = function(foodSprites) {
     var ctx = this._ctx;
-    var swidth = this._foodSpriteWidth; // width of cropped image
-    var sheight = this._foodSpriteHeight; // height of cropped image
+    var swidth = this._model._foodSpriteWidth; // width of cropped image
+    var sheight = this._model._foodSpriteHeight; // height of cropped image
     for (i = 0; i < foodSprites.length; i++) {
         var x = foodSprites[i].x;
         var y = foodSprites[i].y;
