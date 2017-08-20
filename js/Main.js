@@ -2,6 +2,7 @@ var game;
 
 var timer = 0;
 var frameStart = 0;
+var keysDown = {};
 
 function init() {
     var canvas = initFullScreenCanvas("mainCanvas");
@@ -27,6 +28,16 @@ function init() {
         //    console.log('here3');
         //}, false);
     }
+
+    // Handle keyboard controls
+    addEventListener("keydown", function (e) {
+    	keysDown[e.keyCode] = true;
+    }, false);
+    
+    addEventListener("keyup", function (e) {
+    	delete keysDown[e.keyCode];
+    }, false);
+
     onLoaded();
 }
 

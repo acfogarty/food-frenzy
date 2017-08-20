@@ -9,6 +9,7 @@ function GameModel() {
     this.xmax = 480; // maximum x value of background image
     this.ymax = 480; // maximum y value of background image
     this.heroSpriteHeight = 64;
+    this.heroSpriteWidth = 64;
     this._foodSpriteWidth = 35;
     this._foodSpriteHeight = 40;
 
@@ -22,7 +23,8 @@ function GameModel() {
 _p = GameModel.prototype;
 
 _p.reset = function() {
-    console.log('reset');
+
+    // food sprites fall automatically
     for (i = 0; i < this._foodSprites.length; i++) {
         this._foodSprites[i].y += this._foodSprites[i].speed;
         // if sprite has fallen to bottom, re-initialise it
@@ -30,6 +32,25 @@ _p.reset = function() {
             this._foodSprites[i].initialiseSprite();
         }
     }
+
+    // hero sprite is moved via keyboard
+    this._hero.velocity = 0; // no acceleration
+    if (37 in keysDown) { // left arrow
+        this._hero.velocity = this._hero.speed * -1;
+    }
+    if (39 in keysDown) { // right arrow
+        this._hero.velocity = this._hero.speed;
+    }
+    this._hero.x += this._hero.velocity;
+    // hero cannot leave game, no PBC
+    if (this._hero.x < 0) {
+        this._hero.x = 0;
+    }
+    if (this._hero.x > (this.xmax - this.heroSpriteWidth)) {
+        console.log('too far');
+        this._hero.x = this.xmax - this.heroSpriteWidth;
+    }
+
 };
 
 function Sprite(model) {
@@ -51,5 +72,6 @@ _s.initialiseSprite = function() {
 function Hero(model) {
     this.x = model.xmax / 2;
     this.y = model.ymax - model.heroSpriteHeight;
-    this.speed = 2; // pixels per frame
+    this.speed = 10; // pixels per frame (speed if moving)
+    this.velocity = 0;
 }
