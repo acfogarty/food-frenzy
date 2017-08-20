@@ -34,7 +34,7 @@ _p.repaint = function() {
     this._ctx.save();
     this._ctx.translate(this._x, this._y);
     bgImageSize = this._drawBackground(); // TODO don't return size, this is a variable is model now, rather check if image siye is same as model.size
-    this._drawHero(bgImageSize.width*0.2, bgImageSize.height*0.8); //TODO hero class with coordinqtes
+    this._drawHero(this._model._hero); //TODO hero class with coordinqtes
     this._drawFood(this._model._foodSprites);
     this._ctx.restore();
 };
@@ -45,8 +45,10 @@ _p._drawBackground = function() {
     return {width: this._backgroundImage.width, height: this._backgroundImage.height};
 };
 
-_p._drawHero = function(x, y) {
+_p._drawHero = function(hero) {
     var ctx = this._ctx;
+    var x = hero.x;
+    var y = hero.y;
     ctx.drawImage(this._heroImage, x, y);  // TODO, check if loaded
 };
 
