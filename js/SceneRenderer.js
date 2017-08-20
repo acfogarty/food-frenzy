@@ -34,7 +34,7 @@ function SceneRenderer(context, model) {
 
     this._foodTypes = ['GOOD','BAD','GOOD','GOOD','BAD','GOOD']; //TODO make dict
     this._foodSpriteCropX = {'APPLE': 0, 'CHEESE': 40, 'LEMON': 80, 'CARROT': 120, 'PIZZA': 160, 'GRAPES': 200};
-    this._foodSpriteWidth = 40;
+    this._foodSpriteWidth = 35;
     this._foodSpriteHeight = 40;
 
     this._foodSprites = [];
@@ -80,10 +80,17 @@ _p._drawFood = function(foodSprites) {
     var swidth = this._foodSpriteWidth; // width of cropped image
     var sheight = this._foodSpriteHeight; // height of cropped image
     for (i = 0; i < foodSprites.length; i++) {
-        var x = foodSprites[i].x;
-        var y = foodSprites[i].y;
+        //var x = foodSprites[i].x;
+        //var y = foodSprites[i].y;
+        var x = randomIntFromInterval(0, 300);
+        var y = randomIntFromInterval(0, 300);
         var sx = this._foodSpriteCropX[foodSprites[i].type]; // start crop
         var sy = 0; // start crop
         ctx.drawImage(this._foodImage, sx, sy, swidth, sheight, x, y, swidth, sheight);  // TODO, check if loaded
     }
 };
+
+function randomIntFromInterval(min,max)
+{
+    return Math.floor(Math.random()*(max-min+1)+min);
+}

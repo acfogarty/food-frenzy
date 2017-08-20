@@ -55,3 +55,7 @@ _p._clearCanvas = function() {
 _p.handleClick = function(x, y) {
 		this._reset();
 };
+
+_p.handleButtonClick = function() {
+		this._reset();
+};
