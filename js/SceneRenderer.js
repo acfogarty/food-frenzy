@@ -21,7 +21,6 @@ function SceneRenderer(context, model) {
     this._foodImage = new Image();
     this._foodImage.src = "images/food.png";
 
-    this._foodTypes = ['GOOD','BAD','GOOD','GOOD','BAD','GOOD']; //TODO make dict
     this._foodSpriteCropX = {'APPLE': 0, 'CHEESE': 40, 'LEMON': 80, 'CARROT': 120, 'PIZZA': 160, 'GRAPES': 200};
 }
 

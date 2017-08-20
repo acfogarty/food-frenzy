@@ -13,6 +13,11 @@ function GameModel() {
     this._foodSpriteWidth = 35;
     this._foodSpriteHeight = 40;
 
+    this._winPadding = 32; // food and hero must be closer than this distance to eat
+
+    this.score = 0;
+    this.weight = 0;
+
     this._foodSprites = [];
     var sprite1 = new Sprite(this);
     this._foodSprites.push(sprite1);
@@ -24,9 +29,31 @@ _p = GameModel.prototype;
 
 _p.reset = function() {
 
+    scoreIncrement = 5; // TODO do better
+
     // food sprites fall automatically
     for (i = 0; i < this._foodSprites.length; i++) {
+
+        // check if hero eats food
+        var xDiff = Math.abs(this._hero.x - this._foodSprites[i].x);
+        var yDiff = Math.abs(this._hero.y - this._foodSprites[i].y);
+        if ((xDiff < this._winPadding) && (yDiff < this._winPadding)) {
+            console.log(this._foodSprites[i].foodGroup);
+            if (this._foodSprites[i].foodGroup == 'GOOD') {
+                this.score += scoreIncrement;
+            } else if (this._foodSprites[i].foodGroup == 'BAD') {
+                this.weight += scoreIncrement;
+            } else {
+                console.log('food group unknown');
+            }
+            this._foodSprites[i].initialiseSprite();
+            console.log(this.weight, this.score);
+            document.getElementById("scoreValue").innerHTML = this.score;
+            document.getElementById("weightValue").innerHTML = this.weight;
+        }
+
         this._foodSprites[i].y += this._foodSprites[i].speed;
+
         // if sprite has fallen to bottom, re-initialise it
         if (this._foodSprites[i].y > (this.ymax - this._foodSpriteHeight)) {
             this._foodSprites[i].initialiseSprite();
@@ -51,11 +78,16 @@ _p.reset = function() {
         this._hero.x = this.xmax - this.heroSpriteWidth;
     }
 
+    // check if hero eats food
+
 };
 
 function Sprite(model) {
     types = ['APPLE', 'CHEESE', 'LEMON', 'CARROT', 'PIZZA', 'GRAPES']
+    foodGroups = {'APPLE': 'GOOD', 'CHEESE': 'BAD', 'LEMON': 'GOOD', 'CARROT': 'GOOD', 'PIZZA': 'BAD', 'GRAPES': 'GOOD'};
+    // TODO use function initialiseSprite
     this.type = types[randomIntFromInterval(0, types.length)];
+    this.foodGroup = foodGroups[this.type];
     this.x = randomIntFromInterval(0, model.xmax - model._foodSpriteWidth);
     this.y = 0;
     this.speed = 10;  // pixels per frame
@@ -65,6 +97,7 @@ _s = Sprite.prototype;
 
 _s.initialiseSprite = function() {
     this.type = types[randomIntFromInterval(0, 5)];
+    this.foodGroup = foodGroups[this.type];
     this.x = randomIntFromInterval(0, 300);
     this.y = 0;
 };
