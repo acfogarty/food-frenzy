@@ -5,35 +5,29 @@
  * @param canvas the canvas object to use for drawing
  */
 function Game(canvas) {
-	this._gameRect = null;
-	this._canvas = canvas;
-	this._ctx = canvas.getContext("2d");
-	this._gameModel = new GameModel();
-
-	this._sceneRenderer = new SceneRenderer(this._ctx, this._gameModel);
-	//this.handleResize();
+    this.canvas = canvas;
+    this.ctx = canvas.getContext("2d");
+    this.gameModel = new GameModel();
+    this.sceneRenderer = new SceneRenderer(this.ctx, this.gameModel);
 }
 
-_p = Game.prototype;
+p = Game.prototype;
 
 /**
  * Reset the _gameModel and redraw the game.
  */
-_p._reset = function() {
-	this._clearCanvas();
-	this._gameModel.reset();
-	this._sceneRenderer.repaint();
+p.reset = function() {
+    this.clearCanvas();
+    this.gameModel.reset();
+    this.sceneRenderer.repaint();
 };
 
 /**
  * Called when the screen has resized. In this case we need to calculate
  * new size and position for the game game and repaint it.
  */
-_p.handleResize = function() {
-	//this._clearCanvas();
-	//this._gameRect = this._getGameRect();
-	//this._sceneRenderer.setSize(this._gameRect.x, this._gameRect.y, this._gameRect.cellSize);
-	this._sceneRenderer.repaint();
+p.handleResize = function() {
+    this.sceneRenderer.repaint();
 };
 
 /**
@@ -41,9 +35,9 @@ _p.handleResize = function() {
  * to draw something like background picture or border, this is the good place
  * to do it.
  */
-_p._clearCanvas = function() {
-	this._ctx.fillStyle = "white";
-	this._ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
+p.clearCanvas = function() {
+    this.ctx.fillStyle = "white";
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 };
 
 /**
@@ -52,10 +46,10 @@ _p._clearCanvas = function() {
  * @param x the x coordinate of the click or tap
  * @param y the y coordinate of the click or tap
  */
-_p.handleClick = function(x, y) {
-		this._reset();
+p.handleClick = function(x, y) {
+		this.reset();
 };
 
-_p.handleButtonClick = function() {
-		this._reset();
+p.handleButtonClick = function() {
+		this.reset();
 };

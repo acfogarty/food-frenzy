@@ -4,6 +4,9 @@ var timer = 0;
 var frameStart = 0;
 var keysDown = {};
 
+var types = ['APPLE', 'CHEESE', 'LEMON', 'CARROT', 'PIZZA', 'GRAPES'];
+var foodGroups = {'APPLE': 'GOOD', 'CHEESE': 'BAD', 'LEMON': 'GOOD', 'CARROT': 'GOOD', 'PIZZA': 'BAD', 'GRAPES': 'GOOD'};
+
 function init() {
     var canvas = initFullScreenCanvas("mainCanvas");
     var button = document.getElementById(controlButton);
@@ -50,7 +53,7 @@ function animate() {
     var now = new Date().getTime();
     var passed = now - frameStart;
     if (passed > 60) {
-        game._reset()
+        game.reset()
         frameStart = now;
         console.log('here');
     }
