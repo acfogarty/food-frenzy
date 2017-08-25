@@ -19,8 +19,9 @@ function GameModel() {
     this.weight = 0;
 
     this.foodSprites = [];
-    var sprite1 = new Sprite(this);
-    this.foodSprites.push(sprite1);
+    this.nMaxSprites = 5;
+    this.intervalAddSprite = 100;
+    this.sinceSpriteLastAdded = 0;
 
     this.hero = new Hero(this);
 }
@@ -30,6 +31,15 @@ p = GameModel.prototype;
 p.reset = function() {
 
     var scoreIncrement = 5; // TODO do better
+
+    // add another sprite?
+    if ((this.foodSprites.length < this.nMaxSprites) && (this.sinceSpriteLastAdded > this.intervalAddSprite)) {
+        var sprite1 = new Sprite(this);
+        this.foodSprites.push(sprite1);
+        this.sinceSpriteLastAdded = 0;
+    }
+
+    this.sinceSpriteLastAdded += 1;
 
     // food sprites fall automatically
     for (var i = 0; i < this.foodSprites.length; i++) {
@@ -84,7 +94,7 @@ function Sprite(model) {
     this.foodGroup = foodGroups[this.type];
     this.x = randomIntFromInterval(0, model.xmax - model.foodSpriteWidth);
     this.y = 0;
-    this.speed = 10;  // pixels per frame
+    this.speed = 20;  // pixels per frame
 }
 
 s = Sprite.prototype;
