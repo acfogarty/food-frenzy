@@ -2,4 +2,4 @@ words to be guessed are from:
 https://github.com/first20hours/google-10000-english/blob/master/google-10000-english-usa-no-swears-medium.txt
 
 dictionary used to check if words exist is from
-/usr/share/dict/words
+https://github.com/dwyl/english-words/blob/master/words_alpha.txt
