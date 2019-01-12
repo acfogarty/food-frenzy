@@ -6,5 +6,5 @@ function loadWordLists() {
   var wordList = JSON.parse(smalldict);
   // larger dictionary for checking if word exists
   var largeWordList = JSON.parse(bigdict);
-  return {'guessWordList': wordList[0], 'checkWordList': largeWordList};
+  return {'correctWordLists': wordList[0], 'completeWordList': largeWordList};
 }

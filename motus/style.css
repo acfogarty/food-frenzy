@@ -2,6 +2,8 @@ table {
   border-collapse: collapse;
   table-layout: fixed;
   width: 200px;
+  margin-left: auto; 
+  margin-right: auto; 
 }
 
 table, th, td {
@@ -10,6 +12,11 @@ table, th, td {
 
 tr {
   height: 50px;
+}
+
+td {
+  text-align: center;
+  vertical-align: middle;
 }
 
 .errormessage {

@@ -7,10 +7,12 @@ var letterHistory = [];
 var colorHistory = [];
 var errorMessage;
 var falseColor = "grey";
-var correctLetterPlacementColor = "blue";
+var correctLetterPlacementColor = "aqua";
 var correctLetterColor = "yellow";
 var nGuesses;
 var nLines = 6; // number of rows in table
+var correctWordLists; // dictionary from which words to be guessed are chosen
+var completeWordList; // big dictionary of all possible English words
 
 function init() {
 
@@ -22,23 +24,37 @@ function init() {
     startGame();
   }, false);
 
+  // start button
+  var gbutton = document.getElementById('giveUpButton');
+  gbutton.addEventListener('click', function(e) {
+    giveUpGame();
+  }, false);
+
   // text field for entering guesses
   var guessWordForm = document.getElementById('guessWordForm');
   guessWordForm.addEventListener("submit", function(e) {
-    reactToGuess(guessWordForm.guessWord.value);
+    reactToGuess(guessWordForm.guessWord.value.toLowerCase());
+    guessWordForm.guessWord.value = '';
     e.preventDefault(); // Don't forget this!
   }, false);
 
   // error message
   errorMessage = document.getElementById('errorMessage');
+
+  data = loadWordLists();
+  correctWordLists = data['correctWordLists'];
+  completeWordList = data['completeWordList'];
 }
 
 function startGame() {
+
+  // word length chosen by user
   wordLength = document.querySelector('input[name="wordLength"]:checked').value;
 
-  //load dictionary
-  //randomly choose word
-  correctWord = 'checks';
+  //randomly choose word for user to guess
+  var maxIndex = correctWordLists[wordLength].length;
+  var randomIndex = Math.floor(Math.random() * maxIndex);
+  correctWord = correctWordLists[wordLength][randomIndex];
 
   //build table
   var table = document.getElementById('gameTable');
@@ -55,14 +71,11 @@ function startGame() {
     }
     table.appendChild(tr);
   }
+
+  guessWordForm.guessWord.focus();
 }
 
 function reactToGuess(guessWord) {
-
-  if (nGuesses > nLines) {
-    alert('You lose! Word was ' + correctWord);
-    resetGame();
-  }
 
   console.log(guessWord);
 
@@ -71,16 +84,28 @@ function reactToGuess(guessWord) {
     return
   }
 
+  if (! completeWordList.includes(guessWord)) {
+    errorMessage.innerHTML = 'Guess words must be in the dictionary!';
+    return
+  }
+
   errorMessage.innerHTML = '';
   var letterArray = guessWord.toUpperCase().split("");
   var colorArray = testGuess(guessWord, correctWord);
   updateLine(letterArray, colorArray, nGuesses);
   nGuesses += 1;
+  console.log('nGuesses ' + nGuesses);
 
   if (guessWord == correctWord) {
     alert('You win!');
     resetGame();
   }
+
+  if (nGuesses >= nLines) {
+    alert('You lose! The correct word was ' + correctWord);
+    resetGame();
+  }
+
 }
 
 function updateLine(letterArray, colorArray, rowIndex) {
@@ -101,21 +126,41 @@ function updateLine(letterArray, colorArray, rowIndex) {
 }
 
 function testGuess (guessWord, correctWord) {
+
+  // display color for each char in guessWord
   var colorArray = [];
+  // correctly guessed characters (in any position)
+  var correctGuessedChars = '';
+
   for (var i = 0; i < guessWord.length; i++) {
     if (guessWord.charAt(i) == correctWord.charAt(i)) {
       colorArray.push(correctLetterPlacementColor);
+      correctGuessedChars += guessWord.charAt(i);
     } else if (correctWord.includes(guessWord.charAt(i))) {
-      colorArray.push(correctLetterColor);
+      // check this character hasnt already been correctly placed
+      var nCorrect = correctWord.split(guessWord.charAt(i)).length - 1;
+      var nGuessed = correctGuessedChars.split(guessWord.charAt(i)).length - 1;
+      if (nCorrect > nGuessed) {
+        colorArray.push(correctLetterColor);
+        correctGuessedChars += guessWord.charAt(i);
+      } else {
+        colorArray.push(falseColor);
+      }
     } else {
       colorArray.push(falseColor);
     }
   }
   return colorArray;
+
 }
 
 function resetGame() {
   var table = document.getElementById('gameTable');
   table.innerHTML = '';
   nGuesses = 0;
+}
+
+function giveUpGame() {
+  alert('The correct word was ' + correctWord);
+  resetGame();
 }
