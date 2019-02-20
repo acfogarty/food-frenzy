@@ -10,7 +10,7 @@ var falseColor = "grey";
 var correctLetterPlacementColor = "aqua";
 var correctLetterColor = "yellow";
 var nGuesses;
-var nLines = 6; // number of rows in table
+var nLines = 7; // number of rows in table
 var correctWordLists; // dictionary from which words to be guessed are chosen
 var completeWordList; // big dictionary of all possible English words
 
@@ -47,6 +47,8 @@ function init() {
 }
 
 function startGame() {
+
+  resetGame();
 
   // word length chosen by user
   wordLength = document.querySelector('input[name="wordLength"]:checked').value;
