@@ -1,4 +1,4 @@
-html + javascript games
+html5 + javascript games
 
 # food-frenzy
 
@@ -9,3 +9,7 @@ code skeleton from Pro Android Web Game Apps - Juriy Bura
 # motus
 
 Motus word game in English
+
+# fish-in-the-pond
+
+Memory card game
