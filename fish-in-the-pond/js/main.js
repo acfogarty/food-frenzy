@@ -1,35 +1,40 @@
 // types of playing cards in the deck
-var faceCardTypes = ["circle", "cross", "square", "triangle"];
-var cardTypes = faceCardTypes.concat(["back"]);
+// the images files should be available in the images subfolder
+// in png format 
+// e.g. images/circle.png, images/cross.png etc.
+var faceCardTypes = ["circle", "cross", "square", "triangle", "dot", "upsidedowntriangle", "horizontalline", "verticalline"];
+
+// size of the image files for the playing cards
 var cardWidth = 70; // in pixels
 var cardHeight = 100;
+
+// add an image for the back of the cards
+var cardTypes = faceCardTypes.concat(["back"]);
+
 var cardImages = {}; // contains loaded image objects for each card type
 
 // grid used to lay out playing cards
-var nColumns = 10;
-var nRows = 5;
+var nColumns = 4;
+var nRows = 4;
 var nCards = nColumns * nRows; // TODO has to be even number
 var cardsGrid = [];
 
 // list of max 2 cards clicked by the player
-cardsClicked = [];
+var cardsClicked = [];
+
+// if True choose cards randomly to construct deck, 
+// else take 2 of each card type
+var randomDeck = false;
 
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
 canvas.width = cardWidth * nColumns;
 canvas.height = cardHeight * nRows;
 
+
 function init() {
 
-  document.body.appendChild(canvas);
-
-  // Background image
-  var bgReady = false;
-  var bgImage = new Image();
-  bgImage.onload = function () {
-  	bgReady = true;
-  };
-  bgImage.src = "images/background.png";
+  document.getElementById('canvasdiv').appendChild(canvas);
 
   var imagesLoaded = 0;
   for (var i=0; i<cardTypes.length; i++) {
@@ -49,22 +54,19 @@ function init() {
     reactToClick(e);
   }, false);
 
-  // // start button
-  // var button = document.getElementById('startButton');
-  // button.addEventListener('click', function(e) {
-  //   startGame();
-  // }, false);
-
   startGame();
 
 }
 
+
 function startGame() {
 
   nPairsMatched = 0;
+  cardsGrid = [];
+  cardsClicked = [];
 
   // create shuffled deck containing pairs of cards
-  deck = createDeck(nCards, faceCardTypes);
+  deck = createDeck();
 
   // place cards on grid
   for (var i = 0; i < nRows; i++) {
@@ -78,7 +80,8 @@ function startGame() {
 
 }
 
-var render = function () {
+
+function render() {
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -88,15 +91,20 @@ var render = function () {
 
 
 // create shuffled deck containing pairs of cards
-function createDeck(nCards, faceCardTypes) {
+function createDeck() {
   var deck = [];
   var nCardTypes = faceCardTypes.length;
   for (var i = 0; i < nCards / 2; i++) {
-    // randomly choose a card type
-    var irandom = Math.floor(Math.random() * nCardTypes);
+    if (randomDeck) {
+      // randomly choose a card type
+      icard = Math.floor(Math.random() * nCardTypes);
+    } else {
+      // use all card types
+      icard = i;
+    }
     // put two cards of that type in the deck
-    deck.push(faceCardTypes[irandom]);
-    deck.push(faceCardTypes[irandom]);
+    deck.push(faceCardTypes[icard]);
+    deck.push(faceCardTypes[icard]);
   }
   deck = shuffle(deck);
   return deck;
@@ -131,6 +139,7 @@ function drawCards() {
   }
 }
 
+
 function reactToClick(e) {
   // find which card was clicked
   var rect = canvas.getBoundingClientRect()
@@ -154,7 +163,7 @@ function reactToClick(e) {
 }
 
 
-// check if the two cards are the same
+// check if the two turned-over cards are the same
 function checkGuess() {
 
   var card1 = cardsClicked[0];
@@ -165,13 +174,19 @@ function checkGuess() {
     nPairsMatched++;
     window.alert('Well done!');
   } else {
-    window.alert('Wrong!');
+    window.alert('Oops! Try again');
   }
 
-  // turn the cards back over
+  // turn the cards back down
   cardsClicked = [];
 
   render();
+
+  // check if game is over
+  if (nPairsMatched == nCards / 2) {
+    var answer = window.confirm("Congratulations! Play again?")
+    if (answer) { startGame(); } 
+  }
 }
 
 
@@ -183,13 +198,4 @@ function shuffle(array) {
     array[j] = temp;
   }
   return array;
-}
-
-function sum(array) {
-   var sum = 0;
-   for (var i=0, n=array.length; i < n; i++)
-   {
-      sum += array[i];
-   }
-   return sum;
 }
